@@ -1,7 +1,10 @@
 package config
 
 import (
+	"log"
 	"os"
+
+	"github.com/joho/godotenv"
 )
 
 type Config struct {
@@ -11,9 +14,20 @@ type Config struct {
 }
 
 func LoadConfig() Config {
-	port := getEnv("PORT", "8080")
-	databaseURI := getEnv("DATABASE_URI", "mongodb://localhost:27017")
-	databaseName := getEnv("DATABASE_NAME", "simple_api")
+	// Load .env file for local development
+	_ = godotenv.Load()
+
+	port := getEnv("PORT", "8080") // Default to 8080 if PORT is not set
+
+	databaseURI := os.Getenv("DATABASE_URI")
+	if databaseURI == "" {
+		log.Fatalf("DATABASE_URI is not set")
+	}
+
+	databaseName := os.Getenv("DATABASE_NAME")
+	if databaseName == "" {
+		log.Fatalf("DATABASE_NAME is not set")
+	}
 
 	return Config{
 		Port:         port,
