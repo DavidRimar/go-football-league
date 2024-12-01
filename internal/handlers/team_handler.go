@@ -1,16 +1,29 @@
 package handlers
 
 import (
-	"backend/internal/models"
+	"backend/internal/services"
 	"encoding/json"
 	"net/http"
 )
 
-func TeamHandler(w http.ResponseWriter, r *http.Request) {
-	teams := []models.Team{
-		{ID: 1, Name: "Team A"},
-		{ID: 2, Name: "Team B"},
-		{ID: 3, Name: "Team C"},
+type TeamHandler struct {
+	service *services.TeamService
+}
+
+func NewTeamHandler(service *services.TeamService) *TeamHandler {
+	return &TeamHandler{service: service}
+}
+
+func (h *TeamHandler) GetTeams(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	teams, err := h.service.GetTeams()
+	if err != nil {
+		http.Error(w, "Failed to fetch teams", http.StatusInternalServerError)
+		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
