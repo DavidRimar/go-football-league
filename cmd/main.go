@@ -23,7 +23,11 @@ func main() {
 	defer cancel()
 
 	// Connect to MongoDB
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(cfg.DatabaseURI))
+	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
+	opts := options.Client().ApplyURI(cfg.DatabaseURI).SetServerAPIOptions(serverAPI)
+
+	// Create a new client and connect to the server
+	client, err := mongo.Connect(context.TODO(), opts)
 	if err != nil {
 		log.Fatalf("Failed to connect to MongoDB: %v", err)
 	}

@@ -3,6 +3,7 @@ package repositories
 import (
 	"backend/internal/models"
 	"context"
+	"log"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -25,12 +26,14 @@ func (r *TeamRepository) GetAllTeams() ([]models.Team, error) {
 
 	cursor, err := r.collection.Find(ctx, bson.M{})
 	if err != nil {
+		log.Printf("Error querying teams collection: %v", err)
 		return nil, err
 	}
 	defer cursor.Close(ctx)
 
 	var teams []models.Team
-	if err := cursor.All(ctx, &teams); err != nil {
+	if err = cursor.All(ctx, &teams); err != nil {
+		log.Printf("Error decoding cursor: %v", err)
 		return nil, err
 	}
 
