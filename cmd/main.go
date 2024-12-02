@@ -4,6 +4,7 @@ import (
 	"backend/config"
 	"backend/internal/handlers"
 	"backend/internal/repositories"
+	"backend/internal/router"
 	"backend/internal/services"
 	"context"
 	"log"
@@ -12,7 +13,6 @@ import (
 
 	_ "backend/docs" // Import the generated docs
 
-	httpSwagger "github.com/swaggo/http-swagger"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -23,9 +23,6 @@ import (
 func main() {
 	// Load configuration
 	cfg := config.LoadConfig()
-
-	// Create a new ServeMux
-	mux := http.NewServeMux()
 
 	// Define a context with a timeout
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -49,11 +46,8 @@ func main() {
 	service := services.NewTeamService(repo)
 	handler := handlers.NewTeamHandler(service)
 
-	// Define routes
-	mux.HandleFunc("/api/teams", handler.GetTeams)
-
-	// Serve Swagger UI
-	mux.Handle("/swagger/", httpSwagger.WrapHandler)
+	// Initialize the router
+	mux := router.NewRouter(handler)
 
 	// Start the server
 	log.Printf("Server is running on port %s...", cfg.Port)
