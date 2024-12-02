@@ -14,6 +14,13 @@ func NewTeamHandler(service *services.TeamService) *TeamHandler {
 	return &TeamHandler{service: service}
 }
 
+// @Summary Get all teams
+// @Description Retrieve details of all teams
+// @Tags teams
+// @Accept json
+// @Produce json
+// @Success 200 {array} models.Team
+// @Router /api/teams [get]
 func (h *TeamHandler) GetTeams(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)

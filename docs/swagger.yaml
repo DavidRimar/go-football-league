@@ -1,0 +1,33 @@
+definitions:
+  models.Team:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: This is the Football League API documentation for the Football League
+    service.
+  title: Football League API
+  version: "1.0"
+paths:
+  /api/teams:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve details of all teams
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Team'
+            type: array
+      summary: Get all teams
+      tags:
+      - teams
+swagger: "2.0"

@@ -10,13 +10,22 @@ import (
 	"net/http"
 	"time"
 
+	_ "backend/docs" // Import the generated docs
+
+	httpSwagger "github.com/swaggo/http-swagger"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+// @title Football League API
+// @version 1.0
+// @description This is the Football League API documentation for the Football League service.
 func main() {
 	// Load configuration
 	cfg := config.LoadConfig()
+
+	// Create a new ServeMux
+	mux := http.NewServeMux()
 
 	// Define a context with a timeout
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -41,9 +50,12 @@ func main() {
 	handler := handlers.NewTeamHandler(service)
 
 	// Define routes
-	http.HandleFunc("/api/teams", handler.GetTeams)
+	mux.HandleFunc("/api/teams", handler.GetTeams)
+
+	// Serve Swagger UI
+	mux.Handle("/swagger/", httpSwagger.WrapHandler)
 
 	// Start the server
 	log.Printf("Server is running on port %s...", cfg.Port)
-	log.Fatal(http.ListenAndServe(":"+cfg.Port, nil))
+	log.Fatal(http.ListenAndServe(":"+cfg.Port, mux))
 }
