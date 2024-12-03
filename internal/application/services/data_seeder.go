@@ -4,22 +4,16 @@ import (
 	"context"
 	"log"
 
-	"backend/internal/models"
-	"backend/internal/utils"
+	"backend/internal/application/utils"
+	"backend/internal/domain/interfaces"
 )
 
-// interface to be moved?
-type FixturesRepository interface {
-	GetAllFixtures(ctx context.Context) ([]models.Fixture, error)
-	InsertFixtures(ctx context.Context, games []models.Fixture) error
-}
-
 type DataSeederService struct {
-	teamRepository     TeamRepository
-	fixturesRepository FixturesRepository
+	teamRepository     interfaces.TeamRepository
+	fixturesRepository interfaces.FixturesRepository
 }
 
-func NewDataSeederService(teamRepo TeamRepository, fixturesRepo FixturesRepository) *DataSeederService {
+func NewDataSeederService(teamRepo interfaces.TeamRepository, fixturesRepo interfaces.FixturesRepository) *DataSeederService {
 	return &DataSeederService{
 		teamRepository:     teamRepo,
 		fixturesRepository: fixturesRepo,

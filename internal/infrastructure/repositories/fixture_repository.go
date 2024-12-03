@@ -1,9 +1,8 @@
 package repositories
 
 import (
+	"backend/internal/domain/models"
 	"context"
-
-	"backend/internal/models"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"

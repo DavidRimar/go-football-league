@@ -1,7 +1,7 @@
 package repositories
 
 import (
-	"backend/internal/models"
+	"backend/internal/domain/models"
 	"context"
 	"log"
 	"time"

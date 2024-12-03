@@ -2,10 +2,10 @@ package main
 
 import (
 	"backend/config"
-	"backend/internal/handlers"
-	"backend/internal/repositories"
-	"backend/internal/router"
-	"backend/internal/services"
+	"backend/internal/application/handlers"
+	"backend/internal/application/router"
+	"backend/internal/application/services"
+	"backend/internal/infrastructure/repositories"
 	"context"
 	"log"
 	"net/http"

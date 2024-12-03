@@ -1,10 +1,9 @@
 package utils
 
 import (
+	"backend/internal/domain/models"
 	"fmt"
 	"time"
-
-	"backend/internal/models"
 )
 
 func GenerateFixtures(teams []models.Team) []models.Fixture {
