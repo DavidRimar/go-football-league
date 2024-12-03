@@ -41,13 +41,20 @@ func main() {
 
 	db := client.Database(cfg.DatabaseName)
 
-	// Initialize layers
-	repo := repositories.NewTeamRepository(db)
-	service := services.NewTeamService(repo)
-	handler := handlers.NewTeamHandler(service)
+	// Registering services
+	teamRepository := repositories.NewTeamRepository(db)
+	fixtureRepository := repositories.NewFixturesRepository(db)
+	teamService := services.NewTeamService(teamRepository)
+	seedService := services.NewDataSeederService(teamRepository, fixtureRepository)
+	teamHandler := handlers.NewTeamHandler(teamService)
+
+	// Seeding function
+	if err := seedService.SeedFixtures(ctx); err != nil {
+		log.Fatalf("Data seeding failed: %v", err)
+	}
 
 	// Initialize the router
-	mux := router.NewRouter(handler)
+	mux := router.NewRouter(teamHandler)
 
 	// Start the server
 	log.Printf("Server is running on port %s...", cfg.Port)
