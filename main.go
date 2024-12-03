@@ -48,9 +48,13 @@ func main() {
 	seedService := services.NewDataSeederService(teamRepository, fixtureRepository)
 	teamHandler := handlers.NewTeamHandler(teamService)
 
-	// Seeding function
+	// Seed teams and fixtures
+	if err := seedService.SeedTeams(ctx, "internal/data/teams.json"); err != nil {
+		log.Fatalf("Teams seeding failed: %v", err)
+	}
+
 	if err := seedService.SeedFixtures(ctx); err != nil {
-		log.Fatalf("Data seeding failed: %v", err)
+		log.Fatalf("Fixtures seeding failed: %v", err)
 	}
 
 	// Initialize the router

@@ -1,0 +1,82 @@
+[
+    {
+        "name": "Spooky United",
+        "stadium": "Spooky Ground",
+        "stadiumCapacity": 17500
+    },
+    {
+        "name": "United We Flop",
+        "stadium": "Wee Flop Park",
+        "stadiumCapacity": 60000
+    },
+    {
+        "name": "Real Benchwarmers",
+        "stadium": "Santiago Benchwarmeu",
+        "stadiumCapacity": 80000
+    },
+    {
+        "name": "Not So Athletic Club",
+        "stadium": "Not So Athletic Road",
+        "stadiumCapacity": 52500
+    },
+    {
+        "name": "Bamboozle United",
+        "stadium": "Bamboozle Stadium",
+        "stadiumCapacity": 21000
+    },
+    {
+        "name": "Blunder Town",
+        "stadium": "Huge Blunder Field",
+        "stadiumCapacity": 44000
+    },
+    {
+        "name": "Picklewood Albion",
+        "stadium": "Picklewood Ground",
+        "stadiumCapacity": 14800
+    },
+    {
+        "name": "Wandering Wanderers",
+        "stadium": "Wander Road",
+        "stadiumCapacity": 38000
+    },
+    {
+        "name": "Aston Vanilla",
+        "stadium": "Vanilla Park",
+        "stadiumCapacity": 48000
+    },
+    {
+        "name": "Brighton and Hopeless Albion",
+        "stadium": "American Espresso Arena",
+        "stadiumCapacity": 49500
+    },
+    {
+        "name": "Foolham FC",
+        "stadium": "Foolish Cottage",
+        "stadiumCapacity": 24950
+    },
+    {
+        "name": "Garrison FC",
+        "stadium": "The Garrisons Ground",
+        "stadiumCapacity": 32500
+    },
+    {
+        "name": "Power Rangers",
+        "stadium": "Power Stadium",
+        "stadiumCapacity": 58000
+    },
+    {
+        "name": "Chriswood Forrest",
+        "stadium": "Trees In The Park",
+        "stadiumCapacity": 28750
+    },
+    {
+        "name": "Paris Spent-Too-Much",
+        "stadium": "Parc de Pasta",
+        "stadiumCapacity": 62475
+    },
+    {
+        "name": "Wurst Ham United",
+        "stadium": "Wurst Ham Park",
+        "stadiumCapacity": 55750
+    }
+]

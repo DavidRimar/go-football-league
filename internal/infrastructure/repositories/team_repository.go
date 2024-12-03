@@ -39,3 +39,21 @@ func (r *TeamRepository) GetAllTeams() ([]models.Team, error) {
 
 	return teams, nil
 }
+
+func (r *TeamRepository) InsertTeams(ctx context.Context, teams []models.Team) error {
+
+	var teamDocuments []interface{}
+
+	for _, team := range teams {
+		teamDocument := bson.M{
+			"name":            team.Name,
+			"stadium":         team.Stadium,
+			"stadiumCapacity": team.StadiumCapacity,
+		}
+		teamDocuments = append(teamDocuments, teamDocument)
+	}
+
+	_, err := r.collection.InsertMany(ctx, teamDocuments)
+
+	return err
+}

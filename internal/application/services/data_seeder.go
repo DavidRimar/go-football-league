@@ -20,6 +20,32 @@ func NewDataSeederService(teamRepo interfaces.TeamRepository, fixturesRepo inter
 	}
 }
 
+func (s *DataSeederService) SeedTeams(ctx context.Context, filePath string) error {
+
+	seedTeams := utils.LoadTeamsFromJSON(filePath)
+
+	log.Printf("Teams to insert: %+v\n", seedTeams)
+
+	teams, err := s.teamRepository.GetAllTeams()
+	if err != nil {
+		return err
+	}
+
+	if len(teams) > 0 {
+		log.Println("Teams already seeded.")
+		return nil
+	}
+
+	err = s.teamRepository.InsertTeams(ctx, seedTeams)
+	if err != nil {
+		return err
+	}
+
+	log.Println("Teams seeded successfully!")
+
+	return nil
+}
+
 func (s *DataSeederService) SeedFixtures(ctx context.Context) error {
 
 	// Check if fixtures already exist
