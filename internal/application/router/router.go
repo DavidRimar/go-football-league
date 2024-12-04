@@ -8,17 +8,19 @@ import (
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
-type Handler interface {
+type TeamHandler interface {
 	GetTeams(w http.ResponseWriter, r *http.Request)
 }
 
-func NewRouter(handler Handler) *http.ServeMux {
+type FixtureHandler interface {
+	GetFixturesByGameweek(w http.ResponseWriter, r *http.Request)
+}
+
+func NewRouter(teamHandler TeamHandler, fixtureHandler FixtureHandler) *http.ServeMux {
+
 	mux := http.NewServeMux()
-
-	// Define API routes
-	mux.HandleFunc("/api/teams", handler.GetTeams)
-
-	// Serve Swagger UI
+	mux.HandleFunc("/api/teams", teamHandler.GetTeams)
+	mux.HandleFunc("/api/fixtures/", fixtureHandler.GetFixturesByGameweek)
 	mux.Handle("/swagger/", httpSwagger.WrapHandler)
 
 	return mux

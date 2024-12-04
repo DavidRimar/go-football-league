@@ -44,9 +44,13 @@ func main() {
 	// Registering services
 	teamRepository := repositories.NewTeamRepository(db)
 	fixtureRepository := repositories.NewFixturesRepository(db)
+
 	teamService := services.NewTeamService(teamRepository)
+	fixtureService := services.NewFixtureService(fixtureRepository)
 	seedService := services.NewDataSeederService(teamRepository, fixtureRepository)
+
 	teamHandler := handlers.NewTeamHandler(teamService)
+	fixtureHandler := handlers.NewFixtureHandler(fixtureService)
 
 	// Seed teams and fixtures
 	if err := seedService.SeedTeams(ctx, "internal/data/teams.json"); err != nil {
@@ -58,7 +62,7 @@ func main() {
 	}
 
 	// Initialize the router
-	mux := router.NewRouter(teamHandler)
+	mux := router.NewRouter(teamHandler, fixtureHandler)
 
 	// Start the server
 	log.Printf("Server is running on port %s...", cfg.Port)
