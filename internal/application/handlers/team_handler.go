@@ -27,7 +27,7 @@ func (h *TeamHandler) GetTeams(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	teams, err := h.service.GetTeams()
+	teams, err := h.service.GetTeams(r.Context())
 	if err != nil {
 		http.Error(w, "Failed to fetch teams", http.StatusInternalServerError)
 		return

@@ -3,6 +3,7 @@ package services
 import (
 	"backend/internal/domain/models"
 	"backend/internal/infrastructure/repositories"
+	"context"
 )
 
 type FixturesService struct {
@@ -13,6 +14,6 @@ func NewFixtureService(repo *repositories.FixturesRepository) *FixturesService {
 	return &FixturesService{repo: repo}
 }
 
-func (s *FixturesService) GetFixturesByGameweek(gameweekId int) ([]models.Fixture, error) {
-	return s.repo.GetFixturesByGameweek(gameweekId)
+func (s *FixturesService) GetFixturesByGameweek(ctx context.Context, gameweekId int) ([]models.Fixture, error) {
+	return s.repo.GetFixturesByGameweek(ctx, gameweekId)
 }

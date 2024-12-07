@@ -4,7 +4,6 @@ import (
 	"backend/internal/domain/models"
 	"context"
 	"log"
-	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -35,10 +34,7 @@ func (r *FixturesRepository) GetAllFixtures(ctx context.Context) ([]models.Fixtu
 	return games, nil
 }
 
-func (r *FixturesRepository) GetFixturesByGameweek(gameweekId int) ([]models.Fixture, error) {
-
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
+func (r *FixturesRepository) GetFixturesByGameweek(ctx context.Context, gameweekId int) ([]models.Fixture, error) {
 
 	filter := bson.M{"gameweekId": gameweekId}
 

@@ -2,19 +2,15 @@ package main
 
 import (
 	"backend/config"
-	"backend/internal/application/handlers"
+	"backend/internal/application/di"
 	"backend/internal/application/router"
-	"backend/internal/application/services"
-	"backend/internal/infrastructure/repositories"
-	"context"
+	"backend/internal/application/utils"
+	database "backend/internal/infrastructure/persistence"
 	"log"
 	"net/http"
 	"time"
 
 	_ "backend/docs" // Import the generated docs
-
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // @title Football League API
@@ -25,44 +21,21 @@ func main() {
 	cfg := config.LoadConfig()
 
 	// Define a context with a timeout
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := utils.NewContextWithTimeout(10 * time.Second)
 	defer cancel()
 
-	// Connect to MongoDB
-	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
-	opts := options.Client().ApplyURI(cfg.DatabaseURI).SetServerAPIOptions(serverAPI)
-
-	// Create a new client and connect to the server
-	client, err := mongo.Connect(context.TODO(), opts)
-	if err != nil {
-		log.Fatalf("Failed to connect to MongoDB: %v", err)
-	}
-	defer client.Disconnect(ctx)
-
-	db := client.Database(cfg.DatabaseName)
+	// MongoDB
+	mongoDB := database.InitializeMongoDB(ctx, cfg.DatabaseURI, cfg.DatabaseName)
+	defer mongoDB.Client.Disconnect(ctx)
 
 	// Registering services
-	teamRepository := repositories.NewTeamRepository(db)
-	fixtureRepository := repositories.NewFixturesRepository(db)
-
-	teamService := services.NewTeamService(teamRepository)
-	fixtureService := services.NewFixtureService(fixtureRepository)
-	seedService := services.NewDataSeederService(teamRepository, fixtureRepository)
-
-	teamHandler := handlers.NewTeamHandler(teamService)
-	fixtureHandler := handlers.NewFixtureHandler(fixtureService)
+	container := di.InitializeServices(mongoDB.Database)
 
 	// Seed teams and fixtures
-	if err := seedService.SeedTeams(ctx, "internal/data/teams.json"); err != nil {
-		log.Fatalf("Teams seeding failed: %v", err)
-	}
-
-	if err := seedService.SeedFixtures(ctx); err != nil {
-		log.Fatalf("Fixtures seeding failed: %v", err)
-	}
+	container.SeedService.SeedData(ctx)
 
 	// Initialize the router
-	mux := router.NewRouter(teamHandler, fixtureHandler)
+	mux := router.NewRouter(container.TeamHandler, container.FixtureHandler)
 
 	// Start the server
 	log.Printf("Server is running on port %s...", cfg.Port)

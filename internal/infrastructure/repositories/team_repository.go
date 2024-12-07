@@ -4,7 +4,6 @@ import (
 	"backend/internal/domain/models"
 	"context"
 	"log"
-	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -20,9 +19,7 @@ func NewTeamRepository(db *mongo.Database) *TeamRepository {
 	}
 }
 
-func (r *TeamRepository) GetAllTeams() ([]models.Team, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
+func (r *TeamRepository) GetAllTeams(ctx context.Context) ([]models.Team, error) {
 
 	cursor, err := r.collection.Find(ctx, bson.M{})
 	if err != nil {

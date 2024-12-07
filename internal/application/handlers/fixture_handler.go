@@ -44,7 +44,7 @@ func (h *FixtureHandler) GetFixturesByGameweek(w http.ResponseWriter, r *http.Re
 	}
 
 	// GET FIXTURES BY ID
-	fixtures, err := h.service.GetFixturesByGameweek(gameweekId)
+	fixtures, err := h.service.GetFixturesByGameweek(r.Context(), gameweekId)
 	if err != nil {
 		log.Printf("Error fetching fixtures for gameweek %d: %v", gameweekId, err)
 		http.Error(w, "Failed to fetch fixtures", http.StatusInternalServerError)

@@ -20,13 +20,26 @@ func NewDataSeederService(teamRepo interfaces.TeamRepository, fixturesRepo inter
 	}
 }
 
-func (s *DataSeederService) SeedTeams(ctx context.Context, filePath string) error {
+func (s *DataSeederService) SeedData(ctx context.Context) error {
+	if err := s.seedTeams(ctx, "internal/data/teams.json"); err != nil {
+		log.Fatalf("Teams seeding failed: %v", err)
+		return err
+	}
+
+	if err := s.seedFixtures(ctx); err != nil {
+		log.Fatalf("Fixtures seeding failed: %v", err)
+		return err
+	}
+	return nil
+}
+
+func (s *DataSeederService) seedTeams(ctx context.Context, filePath string) error {
 
 	seedTeams := utils.LoadTeamsFromJSON(filePath)
 
 	log.Printf("Teams to insert: %+v\n", seedTeams)
 
-	teams, err := s.teamRepository.GetAllTeams()
+	teams, err := s.teamRepository.GetAllTeams(ctx)
 	if err != nil {
 		return err
 	}
@@ -46,7 +59,7 @@ func (s *DataSeederService) SeedTeams(ctx context.Context, filePath string) erro
 	return nil
 }
 
-func (s *DataSeederService) SeedFixtures(ctx context.Context) error {
+func (s *DataSeederService) seedFixtures(ctx context.Context) error {
 
 	// Check if fixtures already exist
 	existingGames, err := s.fixturesRepository.GetAllFixtures(ctx)
@@ -60,7 +73,7 @@ func (s *DataSeederService) SeedFixtures(ctx context.Context) error {
 	}
 
 	// Fetch all teams
-	teams, err := s.teamRepository.GetAllTeams()
+	teams, err := s.teamRepository.GetAllTeams(ctx)
 	if err != nil {
 		return err
 	}
