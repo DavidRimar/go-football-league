@@ -10,13 +10,15 @@ import (
 	"backend/internal/application/dtos"
 	"backend/internal/application/services"
 	"backend/internal/application/utils"
+	"backend/internal/domain/models"
 
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type FixtureHandler struct {
-	service *services.FixturesService
+	service          *services.FixturesService
+	teamStatsService *services.TeamStatsService
 }
 
 func NewFixtureHandler(service *services.FixturesService) *FixtureHandler {
@@ -84,6 +86,12 @@ func (h *FixtureHandler) UpdateFixture(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Fetch the existing fixture
+	fixture, err := h.service.GetFixturesById(ctx, fixtureID)
+	if err != nil {
+		return err
+	}
+
 	// Parse request body
 	var dto dtos.UpdateFixtureDTO
 	if err := json.NewDecoder(r.Body).Decode(&dto); err != nil {
@@ -99,6 +107,30 @@ func (h *FixtureHandler) UpdateFixture(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Failed to update fixture", http.StatusInternalServerError)
 		}
 		return
+	}
+
+	// If the fixture status is "Played", call TeamStatsService to update team statistics
+	if dto.Status != nil && *dto.Status == "Played" {
+		if fixture.Status == "Played" {
+			// Reverse old stats
+			if err := h.teamStatsService.UpdateTeamStatistics(ctx, fixture, true); err != nil {
+				http.Error(w, "Failed to reverse team statistics", http.StatusInternalServerError)
+				return
+			}
+		}
+
+		// Apply new stats
+		newFixture := models.Fixture{
+			HomeTeam:  fixture.HomeTeamID,
+			AwayTeam:  fixture.AwayTeamID,
+			HomeScore: dto.HomeScore,
+			AwayScore: dto.AwayScore,
+			Status:    *dto.Status,
+		}
+		if err := h.teamStatsService.UpdateTeamStatistics(ctx, newFixture, false); err != nil {
+			http.Error(w, "Failed to update team statistics", http.StatusInternalServerError)
+			return
+		}
 	}
 
 	// Respond with success
