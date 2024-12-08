@@ -1,10 +1,54 @@
 definitions:
+  dtos.UpdateFixtureDTO:
+    properties:
+      awayScore:
+        type: integer
+      homeScore:
+        type: integer
+      status:
+        $ref: '#/definitions/models.FixtureStatus'
+    type: object
+  models.Fixture:
+    properties:
+      awayScore:
+        type: integer
+      awayTeam:
+        description: References Team.ID
+        type: string
+      date:
+        type: string
+      gameweekId:
+        type: integer
+      homeScore:
+        type: integer
+      homeTeam:
+        description: References Team.ID
+        type: string
+      id:
+        type: string
+      status:
+        $ref: '#/definitions/models.FixtureStatus'
+    type: object
+  models.FixtureStatus:
+    enum:
+    - Played
+    - Live
+    - Upcoming
+    type: string
+    x-enum-varnames:
+    - StatusPlayed
+    - StatusLive
+    - StatusUpcoming
   models.Team:
     properties:
       id:
         type: string
       name:
         type: string
+      stadium:
+        type: string
+      stadiumCapacity:
+        type: integer
     type: object
 info:
   contact: {}
@@ -13,6 +57,64 @@ info:
   title: Football League API
   version: "1.0"
 paths:
+  /api/fixtures/{fixtureId}:
+    put:
+      consumes:
+      - application/json
+      description: Update the fixture's status and scores by its ID.
+      parameters:
+      - description: Fixture ID
+        in: path
+        name: fixtureId
+        required: true
+        type: string
+      - description: Fixture Update Payload
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.UpdateFixtureDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Fixture updated successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request body or missing fixture ID
+          schema:
+            type: string
+        "404":
+          description: Fixture not found
+          schema:
+            type: string
+      summary: Update Fixture
+      tags:
+      - Fixtures
+  /api/fixtures/{gameweekId}:
+    get:
+      consumes:
+      - application/json
+      description: Get Fixtures by a Gameweek Id
+      parameters:
+      - description: Gameweek
+        in: path
+        name: gameweekId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Fixture'
+            type: array
+      summary: Get Fixtures by Gameweek
+      tags:
+      - Fixtures
   /api/teams:
     get:
       consumes:
@@ -29,5 +131,5 @@ paths:
             type: array
       summary: Get all teams
       tags:
-      - teams
+      - Teams
 swagger: "2.0"

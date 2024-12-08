@@ -63,3 +63,20 @@ func (r *FixturesRepository) InsertFixtures(ctx context.Context, games []models.
 	_, err := r.collection.InsertMany(ctx, gameInterfaces)
 	return err
 }
+
+func (r *FixturesRepository) UpdateFixture(ctx context.Context, fixtureID string, fixture models.Fixture) error {
+
+	filter := bson.M{"_id": fixtureID}
+	fieldsUpdate := bson.M{}
+
+	fieldsUpdate["homeScore"] = fixture.HomeScore
+	fieldsUpdate["awayScore"] = fixture.AwayScore
+	fieldsUpdate["status"] = fixture.Status
+
+	_, err := r.collection.UpdateOne(ctx, filter, bson.M{"$set": fieldsUpdate})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

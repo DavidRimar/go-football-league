@@ -7,6 +7,7 @@ require (
 	github.com/swaggo/http-swagger v1.3.4
 	github.com/swaggo/swag v1.16.4
 	go.mongodb.org/mongo-driver v1.17.1
+	github.com/gorilla/mux v1.8.1
 )
 
 require (

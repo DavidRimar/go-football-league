@@ -5,6 +5,7 @@ import (
 
 	_ "backend/docs" // Swagger docs import
 
+	"github.com/gorilla/mux"
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
@@ -14,14 +15,16 @@ type TeamHandler interface {
 
 type FixtureHandler interface {
 	GetFixturesByGameweek(w http.ResponseWriter, r *http.Request)
+	UpdateFixture(w http.ResponseWriter, r *http.Request)
 }
 
-func NewRouter(teamHandler TeamHandler, fixtureHandler FixtureHandler) *http.ServeMux {
+func NewRouter(teamHandler TeamHandler, fixtureHandler FixtureHandler) *mux.Router {
 
-	mux := http.NewServeMux()
-	mux.HandleFunc("/api/teams", teamHandler.GetTeams)
-	mux.HandleFunc("/api/fixtures/", fixtureHandler.GetFixturesByGameweek)
-	mux.Handle("/swagger/", httpSwagger.WrapHandler)
+	r := mux.NewRouter()
+	r.HandleFunc("/api/teams", teamHandler.GetTeams).Methods("GET")
+	r.HandleFunc("/api/fixtures/{gameweekId}", fixtureHandler.GetFixturesByGameweek).Methods("GET")
+	r.HandleFunc("/api/fixture/{fixtureId}", fixtureHandler.UpdateFixture).Methods("PUT")
+	r.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
 
-	return mux
+	return r
 }

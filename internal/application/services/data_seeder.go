@@ -37,8 +37,6 @@ func (s *DataSeederService) seedTeams(ctx context.Context, filePath string) erro
 
 	seedTeams := utils.LoadTeamsFromJSON(filePath)
 
-	log.Printf("Teams to insert: %+v\n", seedTeams)
-
 	teams, err := s.teamRepository.GetAllTeams(ctx)
 	if err != nil {
 		return err

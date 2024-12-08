@@ -14,4 +14,5 @@ type FixturesRepository interface {
 	GetAllFixtures(ctx context.Context) ([]models.Fixture, error)
 	GetFixturesByGameweek(ctx context.Context, gameweekId int) ([]models.Fixture, error)
 	InsertFixtures(ctx context.Context, fixtures []models.Fixture) error
+	UpdateFixture(ctx context.Context, fixtureID string, dto models.Fixture) error
 }

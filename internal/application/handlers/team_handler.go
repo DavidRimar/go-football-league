@@ -16,7 +16,7 @@ func NewTeamHandler(service *services.TeamService) *TeamHandler {
 
 // @Summary Get all teams
 // @Description Retrieve details of all teams
-// @Tags teams
+// @Tags Teams
 // @Accept json
 // @Produce json
 // @Success 200 {array} models.Team

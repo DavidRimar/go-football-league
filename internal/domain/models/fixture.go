@@ -9,4 +9,6 @@ type Fixture struct {
 	AwayTeam   string        `bson:"awayTeam"` // References Team.ID
 	Date       time.Time     `bson:"date"`
 	Status     FixtureStatus `bson:"status"`
+	HomeScore  int64         `bson:"homeScore"`
+	AwayScore  int64         `bson:"awayScore"`
 }

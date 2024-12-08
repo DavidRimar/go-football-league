@@ -15,6 +15,94 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/fixtures/{fixtureId}": {
+            "put": {
+                "description": "Update the fixture's status and scores by its ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Fixtures"
+                ],
+                "summary": "Update Fixture",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Fixture ID",
+                        "name": "fixtureId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Fixture Update Payload",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dtos.UpdateFixtureDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Fixture updated successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request body or missing fixture ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Fixture not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/fixtures/{gameweekId}": {
+            "get": {
+                "description": "Get Fixtures by a Gameweek Id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Fixtures"
+                ],
+                "summary": "Get Fixtures by Gameweek",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Gameweek",
+                        "name": "gameweekId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Fixture"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/teams": {
             "get": {
                 "description": "Retrieve details of all teams",
@@ -25,7 +113,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "teams"
+                    "Teams"
                 ],
                 "summary": "Get all teams",
                 "responses": {
@@ -43,6 +131,64 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "dtos.UpdateFixtureDTO": {
+            "type": "object",
+            "properties": {
+                "awayScore": {
+                    "type": "integer"
+                },
+                "homeScore": {
+                    "type": "integer"
+                },
+                "status": {
+                    "$ref": "#/definitions/models.FixtureStatus"
+                }
+            }
+        },
+        "models.Fixture": {
+            "type": "object",
+            "properties": {
+                "awayScore": {
+                    "type": "integer"
+                },
+                "awayTeam": {
+                    "description": "References Team.ID",
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "gameweekId": {
+                    "type": "integer"
+                },
+                "homeScore": {
+                    "type": "integer"
+                },
+                "homeTeam": {
+                    "description": "References Team.ID",
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "status": {
+                    "$ref": "#/definitions/models.FixtureStatus"
+                }
+            }
+        },
+        "models.FixtureStatus": {
+            "type": "string",
+            "enum": [
+                "Played",
+                "Live",
+                "Upcoming"
+            ],
+            "x-enum-varnames": [
+                "StatusPlayed",
+                "StatusLive",
+                "StatusUpcoming"
+            ]
+        },
         "models.Team": {
             "type": "object",
             "properties": {
@@ -51,6 +197,12 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
+                },
+                "stadium": {
+                    "type": "string"
+                },
+                "stadiumCapacity": {
+                    "type": "integer"
                 }
             }
         }
