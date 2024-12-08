@@ -6,6 +6,7 @@ import (
 	"backend/internal/application/router"
 	"backend/internal/application/utils"
 	database "backend/internal/infrastructure/persistence"
+	"backend/internal/middleware"
 	"log"
 	"net/http"
 	"time"
@@ -36,6 +37,9 @@ func main() {
 
 	// Initialize the router
 	mux := router.NewRouter(container.TeamHandler, container.FixtureHandler)
+
+	// Add CORS
+	mux.Use(middleware.CORS)
 
 	// Start the server
 	log.Printf("Server is running on port %s...", cfg.Port)

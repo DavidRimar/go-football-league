@@ -141,7 +141,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "status": {
-                    "$ref": "#/definitions/models.FixtureStatus"
+                    "type": "string"
                 }
             }
         },

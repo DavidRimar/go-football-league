@@ -6,7 +6,7 @@ definitions:
       homeScore:
         type: integer
       status:
-        $ref: '#/definitions/models.FixtureStatus'
+        type: string
     type: object
   models.Fixture:
     properties:
