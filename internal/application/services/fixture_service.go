@@ -20,21 +20,24 @@ func (s *FixturesService) GetFixturesByGameweek(ctx context.Context, gameweekId 
 	return s.repo.GetFixturesByGameweek(ctx, gameweekId)
 }
 
-func (s *FixturesService) UpdateFixture(ctx context.Context, fixtureID string, fixture dtos.UpdateFixtureDTO) error {
+func (s *FixturesService) GetFixtureByID(ctx context.Context, fixtureID string) (*models.Fixture, error) {
+	return s.repo.GetFixtureByID(ctx, fixtureID)
+}
+
+func (s *FixturesService) UpdateFixture(ctx context.Context, fixtureID string, fixtureUpdate dtos.UpdateFixtureDTO) error {
 
 	if fixtureID == "" {
 		return errors.New("fixture ID cannot be empty")
 	}
 
-	// Fetch the existing fixture
 	fixture, err := s.repo.GetFixtureByID(ctx, fixtureID)
 	if err != nil {
 		return err
 	}
 
-	fixture.HomeScore = *dto.HomeScore
-	fixture.AwayScore = *dto.AwayScore
-	fixture.Status = models.StatusPlayed // only allow to update Final Score
+	fixture.HomeScore = fixtureUpdate.HomeScore
+	fixture.AwayScore = fixtureUpdate.AwayScore
+	fixture.Status = models.FixtureStatus(fixtureUpdate.Status)
 
 	return s.repo.UpdateFixture(ctx, fixtureID, fixture)
 }

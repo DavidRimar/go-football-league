@@ -14,7 +14,8 @@ func NewTeamStatsService(teamStatsRepo *repositories.TeamStatisticsRepository) *
 	return &TeamStatsService{teamStatsRepo: teamStatsRepo}
 }
 
-func (s *TeamStatsService) UpdateTeamStatistics(ctx context.Context, fixture models.Fixture, reverse bool) error {
+func (s *TeamStatsService) UpdateTeamStatistics(ctx context.Context, fixture models.Fixture) error {
+
 	// Fetch statistics for both teams
 	homeStats, err := s.teamStatsRepo.GetTeamStatistics(ctx, fixture.HomeTeam)
 	if err != nil {
@@ -26,56 +27,29 @@ func (s *TeamStatsService) UpdateTeamStatistics(ctx context.Context, fixture mod
 		return err
 	}
 
-	// Update statistics based on the fixture result
-	if !reverse {
-		// Increment stats
-		homeStats.GamesPlayed++
-		awayStats.GamesPlayed++
+	// Increment stats
+	homeStats.GamesPlayed++
+	awayStats.GamesPlayed++
 
-		if fixture.HomeScore > fixture.AwayScore {
-			homeStats.Wins++
-			awayStats.Losses++
-			homeStats.Points += 3
-		} else if fixture.HomeScore < fixture.AwayScore {
-			awayStats.Wins++
-			homeStats.Losses++
-			awayStats.Points += 3
-		} else {
-			homeStats.Draws++
-			awayStats.Draws++
-			homeStats.Points++
-			awayStats.Points++
-		}
-
-		homeStats.GoalsScored += fixture.HomeScore
-		homeStats.GoalsConceded += fixture.AwayScore
-		awayStats.GoalsScored += fixture.AwayScore
-		awayStats.GoalsConceded += fixture.HomeScore
+	if fixture.HomeScore > fixture.AwayScore {
+		homeStats.Wins++
+		awayStats.Losses++
+		homeStats.Points += 3
+	} else if fixture.HomeScore < fixture.AwayScore {
+		awayStats.Wins++
+		homeStats.Losses++
+		awayStats.Points += 3
 	} else {
-		// Reverse stats
-		homeStats.GamesPlayed--
-		awayStats.GamesPlayed--
-
-		if fixture.HomeScore > fixture.AwayScore {
-			homeStats.Wins--
-			awayStats.Losses--
-			homeStats.Points -= 3
-		} else if fixture.HomeScore < fixture.AwayScore {
-			awayStats.Wins--
-			homeStats.Losses--
-			awayStats.Points -= 3
-		} else {
-			homeStats.Draws--
-			awayStats.Draws--
-			homeStats.Points--
-			awayStats.Points--
-		}
-
-		homeStats.GoalsScored -= fixture.HomeScore
-		homeStats.GoalsConceded -= fixture.AwayScore
-		awayStats.GoalsScored -= fixture.AwayScore
-		awayStats.GoalsConceded -= fixture.HomeScore
+		homeStats.Draws++
+		awayStats.Draws++
+		homeStats.Points++
+		awayStats.Points++
 	}
+
+	homeStats.GoalsScored += fixture.HomeScore
+	homeStats.GoalsConceded += fixture.AwayScore
+	awayStats.GoalsScored += fixture.AwayScore
+	awayStats.GoalsConceded += fixture.HomeScore
 
 	// Save updated statistics
 	err = s.teamStatsRepo.UpdateTeamStatistics(ctx, homeStats)

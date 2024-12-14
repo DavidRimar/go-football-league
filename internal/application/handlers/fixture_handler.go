@@ -86,12 +86,6 @@ func (h *FixtureHandler) UpdateFixture(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Fetch the existing fixture
-	fixture, err := h.service.GetFixturesById(ctx, fixtureID)
-	if err != nil {
-		return err
-	}
-
 	// Parse request body
 	var dto dtos.UpdateFixtureDTO
 	if err := json.NewDecoder(r.Body).Decode(&dto); err != nil {
@@ -99,35 +93,36 @@ func (h *FixtureHandler) UpdateFixture(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Call the service to update the fixture
-	if err := h.service.UpdateFixture(ctx, fixtureID, dto); err != nil {
+	// Fetch the existing fixture
+	oldFixture, err := h.service.GetFixtureByID(ctx, fixtureID)
+	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
 			http.Error(w, "Fixture not found", http.StatusNotFound)
-		} else {
-			http.Error(w, "Failed to update fixture", http.StatusInternalServerError)
 		}
+	}
+
+	// Check if the fixture's status is "Played"
+	if oldFixture.Status == models.StatusPlayed {
+		http.Error(w, "Cannot update a fixture that is already marked as Played", http.StatusBadRequest)
+		return
+	}
+
+	// Call the service to update the fixture
+	if err := h.service.UpdateFixture(ctx, fixtureID, dto); err != nil {
+		http.Error(w, "Failed to update fixture", http.StatusInternalServerError)
 		return
 	}
 
 	// If the fixture status is "Played", call TeamStatsService to update team statistics
-	if dto.Status != nil && *dto.Status == "Played" {
-		if fixture.Status == "Played" {
-			// Reverse old stats
-			if err := h.teamStatsService.UpdateTeamStatistics(ctx, fixture, true); err != nil {
-				http.Error(w, "Failed to reverse team statistics", http.StatusInternalServerError)
-				return
-			}
-		}
+	if dto.Status == models.StatusPlayed {
 
 		// Apply new stats
 		newFixture := models.Fixture{
-			HomeTeam:  fixture.HomeTeamID,
-			AwayTeam:  fixture.AwayTeamID,
 			HomeScore: dto.HomeScore,
 			AwayScore: dto.AwayScore,
-			Status:    *dto.Status,
 		}
-		if err := h.teamStatsService.UpdateTeamStatistics(ctx, newFixture, false); err != nil {
+
+		if err := h.teamStatsService.UpdateTeamStatistics(ctx, newFixture); err != nil {
 			http.Error(w, "Failed to update team statistics", http.StatusInternalServerError)
 			return
 		}
