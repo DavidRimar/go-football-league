@@ -26,6 +26,8 @@ func GenerateFixtures(teams []models.Team) []models.Fixture {
 				ID:         fmt.Sprintf("GW%d_FXT%d", gameweekId, i+1),
 				HomeTeamId: home.ID,
 				AwayTeamId: away.ID,
+				HomeTeam:   home.Name,
+				AwayTeam:   away.Name,
 				Status:     models.StatusUpcoming,
 				Date:       gameweekDate,
 				GameweekId: gameweekId,
@@ -38,7 +40,7 @@ func GenerateFixtures(teams []models.Team) []models.Fixture {
 	}
 
 	// Reverse fixtures
-	reverseStartDate := startDate.AddDate(0, 0, (rounds*7)+6) // 6 weeks winter break
+	reverseStartDate := startDate.AddDate(0, 0, (rounds*7)+8) // 8 weeks winter break
 
 	for round := 0; round < rounds; round++ {
 		gameweekId := rounds + round + 1
@@ -52,6 +54,8 @@ func GenerateFixtures(teams []models.Team) []models.Fixture {
 				ID:         fmt.Sprintf("gameweek%d_game%d", gameweekId, i+1),
 				HomeTeamId: home.ID,
 				AwayTeamId: away.ID,
+				HomeTeam:   home.Name,
+				AwayTeam:   away.Name,
 				Status:     models.StatusUpcoming,
 				Date:       gameweekDate,
 				GameweekId: gameweekId,
