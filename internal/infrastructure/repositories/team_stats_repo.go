@@ -7,6 +7,7 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type TeamStatisticsRepository struct {
@@ -23,10 +24,17 @@ func (r *TeamStatisticsRepository) GetAllTeamStatistics(ctx context.Context) ([]
 
 	var teamStats []models.TeamStatistics
 
-	// Find all documents in the collection
-	cursor, err := r.collection.Find(ctx, bson.M{})
+	// sorting setting
+	findOptions := options.Find()
+	findOptions.SetSort(bson.D{
+		{Key: "points", Value: -1},         // Sort by Points descending
+		{Key: "goalDifference", Value: -1}, // Tie-breaker: Goal Difference descending
+	})
+
+	// Find documents using findOptions
+	cursor, err := r.collection.Find(ctx, bson.M{}, findOptions)
 	if err != nil {
-		return nil, fmt.Errorf("failed to fetch team statistics: %w", err)
+		return nil, fmt.Errorf("failed to fetch sorted team statistics: %w", err)
 	}
 	defer cursor.Close(ctx)
 
