@@ -36,7 +36,7 @@ func main() {
 	container.SeedService.SeedData(ctx)
 
 	// Initialize the router
-	mux := router.NewRouter(container.TeamHandler, container.FixtureHandler)
+	mux := router.NewRouter(container.TeamHandler, container.FixtureHandler, container.TeamStatsHandler)
 
 	// Add CORS
 	mux.Use(middleware.CORS)

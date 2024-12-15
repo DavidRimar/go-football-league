@@ -34,6 +34,22 @@ func (r *FixturesRepository) GetAllFixtures(ctx context.Context) ([]models.Fixtu
 	return games, nil
 }
 
+func (r *FixturesRepository) GetFixtureByID(ctx context.Context, fixtureID string) (*models.Fixture, error) {
+
+	filter := bson.M{"_id": fixtureID}
+	var fixture models.Fixture
+
+	err := r.collection.FindOne(ctx, filter).Decode(&fixture)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return nil, nil // Return nil if no fixture is found
+		}
+		return nil, err // Return any other error
+	}
+
+	return &fixture, nil
+}
+
 func (r *FixturesRepository) GetFixturesByGameweek(ctx context.Context, gameweekId int) ([]models.Fixture, error) {
 
 	filter := bson.M{"gameweekId": gameweekId}
@@ -64,7 +80,7 @@ func (r *FixturesRepository) InsertFixtures(ctx context.Context, games []models.
 	return err
 }
 
-func (r *FixturesRepository) UpdateFixture(ctx context.Context, fixtureID string, fixture models.Fixture) error {
+func (r *FixturesRepository) UpdateFixture(ctx context.Context, fixtureID string, fixture *models.Fixture) error {
 
 	filter := bson.M{"_id": fixtureID}
 	fieldsUpdate := bson.M{}

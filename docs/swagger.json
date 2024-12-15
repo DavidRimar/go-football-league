@@ -95,6 +95,32 @@
                 }
             }
         },
+        "/api/standings": {
+            "get": {
+                "description": "Retrieve team statistics for all teams",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Standings"
+                ],
+                "summary": "Get standings",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.TeamStatistics"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/teams": {
             "get": {
                 "description": "Retrieve details of all teams",
@@ -133,7 +159,7 @@
                     "type": "integer"
                 },
                 "status": {
-                    "type": "string"
+                    "$ref": "#/definitions/models.FixtureStatus"
                 }
             }
         },
@@ -144,6 +170,9 @@
                     "type": "integer"
                 },
                 "awayTeam": {
+                    "type": "string"
+                },
+                "awayTeamId": {
                     "description": "References Team.ID",
                     "type": "string"
                 },
@@ -157,6 +186,9 @@
                     "type": "integer"
                 },
                 "homeTeam": {
+                    "type": "string"
+                },
+                "homeTeamId": {
                     "description": "References Team.ID",
                     "type": "string"
                 },
@@ -194,6 +226,44 @@
                     "type": "string"
                 },
                 "stadiumCapacity": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.TeamStatistics": {
+            "type": "object",
+            "properties": {
+                "draws": {
+                    "type": "integer"
+                },
+                "gamesPlayed": {
+                    "type": "integer"
+                },
+                "goalDifference": {
+                    "type": "integer"
+                },
+                "goalsConceded": {
+                    "type": "integer"
+                },
+                "goalsScored": {
+                    "type": "integer"
+                },
+                "lastUpdated": {
+                    "type": "string"
+                },
+                "losses": {
+                    "type": "integer"
+                },
+                "points": {
+                    "type": "integer"
+                },
+                "team": {
+                    "type": "string"
+                },
+                "teamId": {
+                    "type": "string"
+                },
+                "wins": {
                     "type": "integer"
                 }
             }
