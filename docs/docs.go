@@ -178,6 +178,9 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "awayTeam": {
+                    "type": "string"
+                },
+                "awayTeamId": {
                     "description": "References Team.ID",
                     "type": "string"
                 },
@@ -191,6 +194,9 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "homeTeam": {
+                    "type": "string"
+                },
+                "homeTeamId": {
                     "description": "References Team.ID",
                     "type": "string"
                 },
@@ -238,6 +244,9 @@ const docTemplate = `{
                 "draws": {
                     "type": "integer"
                 },
+                "gamesPlayed": {
+                    "type": "integer"
+                },
                 "goalDifference": {
                     "type": "integer"
                 },
@@ -253,14 +262,13 @@ const docTemplate = `{
                 "losses": {
                     "type": "integer"
                 },
-                "numberOfGames": {
-                    "type": "integer"
-                },
                 "points": {
                     "type": "integer"
                 },
+                "team": {
+                    "type": "string"
+                },
                 "teamId": {
-                    "description": "FK to Teams",
                     "type": "string"
                 },
                 "wins": {

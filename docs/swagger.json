@@ -170,6 +170,9 @@
                     "type": "integer"
                 },
                 "awayTeam": {
+                    "type": "string"
+                },
+                "awayTeamId": {
                     "description": "References Team.ID",
                     "type": "string"
                 },
@@ -183,6 +186,9 @@
                     "type": "integer"
                 },
                 "homeTeam": {
+                    "type": "string"
+                },
+                "homeTeamId": {
                     "description": "References Team.ID",
                     "type": "string"
                 },
@@ -230,6 +236,9 @@
                 "draws": {
                     "type": "integer"
                 },
+                "gamesPlayed": {
+                    "type": "integer"
+                },
                 "goalDifference": {
                     "type": "integer"
                 },
@@ -245,14 +254,13 @@
                 "losses": {
                     "type": "integer"
                 },
-                "numberOfGames": {
-                    "type": "integer"
-                },
                 "points": {
                     "type": "integer"
                 },
+                "team": {
+                    "type": "string"
+                },
                 "teamId": {
-                    "description": "FK to Teams",
                     "type": "string"
                 },
                 "wins": {
