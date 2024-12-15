@@ -24,8 +24,8 @@ func GenerateFixtures(teams []models.Team) []models.Fixture {
 
 			homeFixture := models.Fixture{
 				ID:         fmt.Sprintf("GW%d_FXT%d", gameweekId, i+1),
-				HomeTeam:   home.ID,
-				AwayTeam:   away.ID,
+				HomeTeamId: home.ID,
+				AwayTeamId: away.ID,
 				Status:     models.StatusUpcoming,
 				Date:       gameweekDate,
 				GameweekId: gameweekId,
@@ -50,8 +50,8 @@ func GenerateFixtures(teams []models.Team) []models.Fixture {
 
 			awayFixture := models.Fixture{
 				ID:         fmt.Sprintf("gameweek%d_game%d", gameweekId, i+1),
-				HomeTeam:   home.ID,
-				AwayTeam:   away.ID,
+				HomeTeamId: home.ID,
+				AwayTeamId: away.ID,
 				Status:     models.StatusUpcoming,
 				Date:       gameweekDate,
 				GameweekId: gameweekId,

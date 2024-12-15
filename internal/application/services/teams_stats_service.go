@@ -2,7 +2,6 @@ package services
 
 import (
 	"backend/internal/application/dtos"
-	"backend/internal/domain/models"
 	"backend/internal/infrastructure/repositories"
 	"context"
 )
@@ -15,8 +14,29 @@ func NewTeamStatsService(teamStatsRepo *repositories.TeamStatisticsRepository) *
 	return &TeamStatsService{teamStatsRepo: teamStatsRepo}
 }
 
-func (s *TeamStatsService) GetTeamStatistics(ctx context.Context) ([]models.TeamStatistics, error) {
-	return s.teamStatsRepo.GetAllTeamStatistics(ctx)
+func (s *TeamStatsService) GetTeamStatistics(ctx context.Context) ([]dtos.GetTeamStatisticsDTO, error) {
+
+	stats, err := s.teamStatsRepo.GetAllTeamStatistics(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	var dtoStats []dtos.GetTeamStatisticsDTO
+	for _, stat := range stats {
+		dtoStats = append(dtoStats, dtos.GetTeamStatisticsDTO{
+			Team:           stat.Team,
+			GamesPlayed:    stat.GamesPlayed,
+			Wins:           stat.Wins,
+			Draws:          stat.Draws,
+			Losses:         stat.Losses,
+			GoalsScored:    stat.GoalsScored,
+			GoalsConceded:  stat.GoalsConceded,
+			GoalDifference: stat.GoalDifference,
+			Points:         stat.Points,
+		})
+	}
+
+	return dtoStats, nil
 }
 
 func (s *TeamStatsService) UpdateTeamStatistics(ctx context.Context, fixture dtos.UpdateTeamStatsDTO) error {
@@ -53,8 +73,10 @@ func (s *TeamStatsService) UpdateTeamStatistics(ctx context.Context, fixture dto
 
 	homeStats.GoalsScored += fixture.HomeScore
 	homeStats.GoalsConceded += fixture.AwayScore
+	homeStats.GoalDifference += (fixture.HomeScore - fixture.AwayScore)
 	awayStats.GoalsScored += fixture.AwayScore
 	awayStats.GoalsConceded += fixture.HomeScore
+	awayStats.GoalDifference += (fixture.AwayScore - fixture.HomeScore)
 
 	// Save updated statistics
 	err = s.teamStatsRepo.UpdateTeamStatistics(ctx, homeStats)

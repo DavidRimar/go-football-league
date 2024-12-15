@@ -118,9 +118,9 @@ func (h *FixtureHandler) UpdateFixture(w http.ResponseWriter, r *http.Request) {
 
 		// Apply new stats
 		newFixture := dtos.UpdateTeamStatsDTO{
-			HomeTeamId: fixture.HomeTeam,
+			HomeTeamId: fixture.HomeTeamId,
 			HomeScore:  dto.HomeScore,
-			AwayTeamId: fixture.AwayTeam,
+			AwayTeamId: fixture.AwayTeamId,
 			AwayScore:  dto.AwayScore,
 		}
 

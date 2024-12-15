@@ -3,7 +3,8 @@ package models
 import "time"
 
 type TeamStatistics struct {
-	TeamID         string    `bson:"teamId" json:"teamId"` // FK to Teams
+	TeamID         string    `bson:"teamId" json:"teamId"`
+	Team           string    `bson:"team" json:"team"`
 	GamesPlayed    int       `bson:"gamesPlayed" json:"gamesPlayed"`
 	Wins           int       `bson:"wins" json:"wins"`
 	Draws          int       `bson:"draws" json:"draws"`

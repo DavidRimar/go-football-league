@@ -138,6 +138,7 @@ func createTeamStatisticsSeedData(teams []models.Team) []models.TeamStatistics {
 	for i, team := range teams {
 		seedTeamStats[i] = models.TeamStatistics{
 			TeamID:         team.ID,
+			Team:           team.Name,
 			GamesPlayed:    0,
 			Wins:           0,
 			Draws:          0,
