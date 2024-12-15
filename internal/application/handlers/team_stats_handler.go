@@ -19,7 +19,7 @@ func NewTeamStatsHandler(service *services.TeamStatsService) *TeamStatsHandler {
 // @Tags Standings
 // @Accept json
 // @Produce json
-// @Success 200 {array} models.TeamStatistics
+// @Success 200 {array} dtos.GetTeamStatisticsDTO
 // @Router /api/standings [get]
 func (h *TeamStatsHandler) GetStandings(w http.ResponseWriter, r *http.Request) {
 

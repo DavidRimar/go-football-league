@@ -19,12 +19,12 @@ type UpdateTeamStatsDTO struct {
 
 type GetTeamStatisticsDTO struct {
 	Team           string `json:"team"`
-	GamesPlayed    int    `bson:"gamesPlayed" json:"gamesPlayed"`
-	Points         int    `bson:"points" json:"points"`
-	Wins           int    `bson:"wins" json:"wins"`
-	Draws          int    `bson:"draws" json:"draws"`
-	Losses         int    `bson:"losses" json:"losses"`
-	GoalsScored    int    `bson:"goalsScored" json:"goalsScored"`
-	GoalsConceded  int    `bson:"goalsConceded" json:"goalsConceded"`
-	GoalDifference int    `bson:"goalDifference" json:"goalDifference"`
+	GamesPlayed    int    `json:"gamesPlayed"`
+	Points         int    `json:"points"`
+	Wins           int    `json:"wins"`
+	Draws          int    `json:"draws"`
+	Losses         int    `json:"losses"`
+	GoalsScored    int    `json:"goalsScored"`
+	GoalsConceded  int    `json:"goalsConceded"`
+	GoalDifference int    `json:"goalDifference"`
 }

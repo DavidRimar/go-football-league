@@ -122,7 +122,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/models.TeamStatistics"
+                                "$ref": "#/definitions/dtos.GetTeamStatisticsDTO"
                             }
                         }
                     }
@@ -157,6 +157,38 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "dtos.GetTeamStatisticsDTO": {
+            "type": "object",
+            "properties": {
+                "draws": {
+                    "type": "integer"
+                },
+                "gamesPlayed": {
+                    "type": "integer"
+                },
+                "goalDifference": {
+                    "type": "integer"
+                },
+                "goalsConceded": {
+                    "type": "integer"
+                },
+                "goalsScored": {
+                    "type": "integer"
+                },
+                "losses": {
+                    "type": "integer"
+                },
+                "points": {
+                    "type": "integer"
+                },
+                "team": {
+                    "type": "string"
+                },
+                "wins": {
+                    "type": "integer"
+                }
+            }
+        },
         "dtos.UpdateFixtureDTO": {
             "type": "object",
             "properties": {
@@ -234,44 +266,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "stadiumCapacity": {
-                    "type": "integer"
-                }
-            }
-        },
-        "models.TeamStatistics": {
-            "type": "object",
-            "properties": {
-                "draws": {
-                    "type": "integer"
-                },
-                "gamesPlayed": {
-                    "type": "integer"
-                },
-                "goalDifference": {
-                    "type": "integer"
-                },
-                "goalsConceded": {
-                    "type": "integer"
-                },
-                "goalsScored": {
-                    "type": "integer"
-                },
-                "lastUpdated": {
-                    "type": "string"
-                },
-                "losses": {
-                    "type": "integer"
-                },
-                "points": {
-                    "type": "integer"
-                },
-                "team": {
-                    "type": "string"
-                },
-                "teamId": {
-                    "type": "string"
-                },
-                "wins": {
                     "type": "integer"
                 }
             }
