@@ -1,6 +1,7 @@
 package services
 
 import (
+	"backend/internal/application/dtos"
 	"backend/internal/domain/models"
 	"backend/internal/infrastructure/repositories"
 	"context"
@@ -18,15 +19,15 @@ func (s *TeamStatsService) GetTeamStatistics(ctx context.Context) ([]models.Team
 	return s.teamStatsRepo.GetAllTeamStatistics(ctx)
 }
 
-func (s *TeamStatsService) UpdateTeamStatistics(ctx context.Context, fixture models.Fixture) error {
+func (s *TeamStatsService) UpdateTeamStatistics(ctx context.Context, fixture dtos.UpdateTeamStatsDTO) error {
 
 	// Fetch statistics for both teams
-	homeStats, err := s.teamStatsRepo.GetTeamStatistics(ctx, fixture.HomeTeam)
+	homeStats, err := s.teamStatsRepo.GetTeamStatistics(ctx, fixture.HomeTeamId)
 	if err != nil {
 		return err
 	}
 
-	awayStats, err := s.teamStatsRepo.GetTeamStatistics(ctx, fixture.AwayTeam)
+	awayStats, err := s.teamStatsRepo.GetTeamStatistics(ctx, fixture.AwayTeamId)
 	if err != nil {
 		return err
 	}

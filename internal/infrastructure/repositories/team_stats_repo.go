@@ -7,7 +7,6 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type TeamStatisticsRepository struct {
@@ -71,10 +70,23 @@ func (r *TeamStatisticsRepository) GetTeamStatistics(ctx context.Context, teamID
 func (r *TeamStatisticsRepository) UpdateTeamStatistics(ctx context.Context, stats *models.TeamStatistics) error {
 
 	filter := bson.M{"teamId": stats.TeamID}
-	update := bson.M{"$set": stats}
+	fieldsUpdate := bson.M{}
 
-	_, err := r.collection.UpdateOne(ctx, filter, update, options.Update().SetUpsert(true))
-	return err
+	fieldsUpdate["gamesPlayed"] = stats.GamesPlayed
+	fieldsUpdate["wins"] = stats.Wins
+	fieldsUpdate["draws"] = stats.Draws
+	fieldsUpdate["losses"] = stats.Losses
+	fieldsUpdate["goalsScored"] = stats.GoalsScored
+	fieldsUpdate["goalsConceded"] = stats.GoalsConceded
+	fieldsUpdate["goalDifference"] = stats.GoalDifference
+	fieldsUpdate["points"] = stats.Points
+
+	_, err := r.collection.UpdateOne(ctx, filter, bson.M{"$set": fieldsUpdate})
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (r *TeamStatisticsRepository) InsertTeamStatistics(ctx context.Context, stats []models.TeamStatistics) error {

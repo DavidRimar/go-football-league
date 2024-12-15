@@ -94,7 +94,7 @@ func (h *FixtureHandler) UpdateFixture(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Fetch the existing fixture
-	oldFixture, err := h.fixtureService.GetFixtureByID(ctx, fixtureID)
+	fixture, err := h.fixtureService.GetFixtureByID(ctx, fixtureID)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
 			http.Error(w, "Fixture not found", http.StatusNotFound)
@@ -102,7 +102,7 @@ func (h *FixtureHandler) UpdateFixture(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Check if the fixture's status is "Played"
-	if oldFixture.Status == models.StatusPlayed {
+	if fixture.Status == models.StatusPlayed {
 		http.Error(w, "Cannot update a fixture that is already marked as Played", http.StatusBadRequest)
 		return
 	}
@@ -117,9 +117,11 @@ func (h *FixtureHandler) UpdateFixture(w http.ResponseWriter, r *http.Request) {
 	if dto.Status == models.StatusPlayed {
 
 		// Apply new stats
-		newFixture := models.Fixture{
-			HomeScore: dto.HomeScore,
-			AwayScore: dto.AwayScore,
+		newFixture := dtos.UpdateTeamStatsDTO{
+			HomeTeamId: fixture.HomeTeam,
+			HomeScore:  dto.HomeScore,
+			AwayTeamId: fixture.AwayTeam,
+			AwayScore:  dto.AwayScore,
 		}
 
 		if err := h.teamStatsService.UpdateTeamStatistics(ctx, newFixture); err != nil {
