@@ -6,7 +6,7 @@ definitions:
       homeScore:
         type: integer
       status:
-        type: string
+        $ref: '#/definitions/models.FixtureStatus'
     type: object
   models.Fixture:
     properties:
@@ -48,6 +48,30 @@ definitions:
       stadium:
         type: string
       stadiumCapacity:
+        type: integer
+    type: object
+  models.TeamStatistics:
+    properties:
+      draws:
+        type: integer
+      goalDifference:
+        type: integer
+      goalsConceded:
+        type: integer
+      goalsScored:
+        type: integer
+      lastUpdated:
+        type: string
+      losses:
+        type: integer
+      numberOfGames:
+        type: integer
+      points:
+        type: integer
+      teamId:
+        description: FK to Teams
+        type: string
+      wins:
         type: integer
     type: object
 info:
@@ -115,6 +139,23 @@ paths:
       summary: Get Fixtures by Gameweek
       tags:
       - Fixtures
+  /api/standings:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve team statistics for all teams
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.TeamStatistics'
+            type: array
+      summary: Get standings
+      tags:
+      - Standings
   /api/teams:
     get:
       consumes:

@@ -21,4 +21,6 @@ type FixturesRepository interface {
 type TeamStatsRepository interface {
 	GetTeamStatistics(ctx context.Context, teamID string) (*models.TeamStatistics, error)
 	UpdateTeamStatistics(ctx context.Context, stats *models.TeamStatistics) error
+	InsertTeamStatistics(ctx context.Context, stats []models.TeamStatistics) error
+	GetAllTeamStatistics(ctx context.Context) ([]models.TeamStatistics, error)
 }

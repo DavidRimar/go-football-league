@@ -17,12 +17,12 @@ import (
 )
 
 type FixtureHandler struct {
-	service          *services.FixturesService
+	fixtureService   *services.FixturesService
 	teamStatsService *services.TeamStatsService
 }
 
-func NewFixtureHandler(service *services.FixturesService) *FixtureHandler {
-	return &FixtureHandler{service: service}
+func NewFixtureHandler(fixtureService *services.FixturesService, teamStatsService *services.TeamStatsService) *FixtureHandler {
+	return &FixtureHandler{fixtureService: fixtureService, teamStatsService: teamStatsService}
 }
 
 func (h *FixtureHandler) validateGameweekID(id string) (int, error) {
@@ -52,7 +52,7 @@ func (h *FixtureHandler) GetFixturesByGameweek(w http.ResponseWriter, r *http.Re
 	}
 
 	// GET FIXTURES BY ID
-	fixtures, err := h.service.GetFixturesByGameweek(r.Context(), gameweekId)
+	fixtures, err := h.fixtureService.GetFixturesByGameweek(r.Context(), gameweekId)
 	if err != nil {
 		log.Printf("Error fetching fixtures for gameweek %d: %v", gameweekId, err)
 		http.Error(w, "Failed to fetch fixtures", http.StatusInternalServerError)
@@ -94,7 +94,7 @@ func (h *FixtureHandler) UpdateFixture(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Fetch the existing fixture
-	oldFixture, err := h.service.GetFixtureByID(ctx, fixtureID)
+	oldFixture, err := h.fixtureService.GetFixtureByID(ctx, fixtureID)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
 			http.Error(w, "Fixture not found", http.StatusNotFound)
@@ -108,7 +108,7 @@ func (h *FixtureHandler) UpdateFixture(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Call the service to update the fixture
-	if err := h.service.UpdateFixture(ctx, fixtureID, dto); err != nil {
+	if err := h.fixtureService.UpdateFixture(ctx, fixtureID, dto); err != nil {
 		http.Error(w, "Failed to update fixture", http.StatusInternalServerError)
 		return
 	}

@@ -14,6 +14,10 @@ func NewTeamStatsService(teamStatsRepo *repositories.TeamStatisticsRepository) *
 	return &TeamStatsService{teamStatsRepo: teamStatsRepo}
 }
 
+func (s *TeamStatsService) GetTeamStatistics(ctx context.Context) ([]models.TeamStatistics, error) {
+	return s.teamStatsRepo.GetAllTeamStatistics(ctx)
+}
+
 func (s *TeamStatsService) UpdateTeamStatistics(ctx context.Context, fixture models.Fixture) error {
 
 	// Fetch statistics for both teams

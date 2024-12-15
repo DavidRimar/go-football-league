@@ -103,6 +103,32 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/standings": {
+            "get": {
+                "description": "Retrieve team statistics for all teams",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Standings"
+                ],
+                "summary": "Get standings",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.TeamStatistics"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/teams": {
             "get": {
                 "description": "Retrieve details of all teams",
@@ -141,7 +167,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "status": {
-                    "type": "string"
+                    "$ref": "#/definitions/models.FixtureStatus"
                 }
             }
         },
@@ -202,6 +228,42 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "stadiumCapacity": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.TeamStatistics": {
+            "type": "object",
+            "properties": {
+                "draws": {
+                    "type": "integer"
+                },
+                "goalDifference": {
+                    "type": "integer"
+                },
+                "goalsConceded": {
+                    "type": "integer"
+                },
+                "goalsScored": {
+                    "type": "integer"
+                },
+                "lastUpdated": {
+                    "type": "string"
+                },
+                "losses": {
+                    "type": "integer"
+                },
+                "numberOfGames": {
+                    "type": "integer"
+                },
+                "points": {
+                    "type": "integer"
+                },
+                "teamId": {
+                    "description": "FK to Teams",
+                    "type": "string"
+                },
+                "wins": {
                     "type": "integer"
                 }
             }

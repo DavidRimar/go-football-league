@@ -18,12 +18,17 @@ type FixtureHandler interface {
 	UpdateFixture(w http.ResponseWriter, r *http.Request)
 }
 
-func NewRouter(teamHandler TeamHandler, fixtureHandler FixtureHandler) *mux.Router {
+type TeamStatsHandler interface {
+	GetStandings(w http.ResponseWriter, r *http.Request)
+}
+
+func NewRouter(teamHandler TeamHandler, fixtureHandler FixtureHandler, teamStatsHandler TeamStatsHandler) *mux.Router {
 
 	r := mux.NewRouter()
 	r.HandleFunc("/api/teams", teamHandler.GetTeams).Methods(http.MethodGet)
 	r.HandleFunc("/api/fixtures/{gameweekId}", fixtureHandler.GetFixturesByGameweek).Methods(http.MethodGet)
 	r.HandleFunc("/api/fixtures/{fixtureId}", fixtureHandler.UpdateFixture).Methods(http.MethodPut)
+	r.HandleFunc("/api/standings", teamStatsHandler.GetStandings).Methods(http.MethodGet)
 	r.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
 
 	return r
