@@ -1,9 +1,9 @@
 package di
 
 import (
-	"backend/internal/application/handlers"
-	"backend/internal/application/services"
-	"backend/internal/infrastructure/repositories"
+	"api/internal/application/handlers"
+	"api/internal/application/services"
+	"api/internal/infrastructure/repositories"
 
 	"go.mongodb.org/mongo-driver/mongo"
 )

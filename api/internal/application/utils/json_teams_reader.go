@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"backend/internal/domain/models"
+	"api/internal/domain/models"
 	"encoding/json"
 	"os"
 )

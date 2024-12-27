@@ -1,8 +1,8 @@
 package services
 
 import (
-	"backend/internal/domain/interfaces"
-	"backend/internal/domain/models"
+	"api/internal/domain/interfaces"
+	"api/internal/domain/models"
 	"context"
 )
 

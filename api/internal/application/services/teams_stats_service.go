@@ -1,8 +1,8 @@
 package services
 
 import (
-	"backend/internal/application/dtos"
-	"backend/internal/infrastructure/repositories"
+	"api/internal/application/dtos"
+	"api/internal/infrastructure/repositories"
 	"context"
 )
 

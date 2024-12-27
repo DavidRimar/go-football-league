@@ -7,10 +7,10 @@ import (
 	"net/http"
 	"strconv"
 
-	"backend/internal/application/dtos"
-	"backend/internal/application/services"
-	"backend/internal/application/utils"
-	"backend/internal/domain/models"
+	"api/internal/application/dtos"
+	"api/internal/application/services"
+	"api/internal/application/utils"
+	"api/internal/domain/models"
 
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/mongo"

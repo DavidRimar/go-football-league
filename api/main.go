@@ -1,18 +1,17 @@
 package main
 
 import (
-	"backend/config"
-	"backend/internal/application/di"
-	"backend/internal/application/router"
-	"backend/internal/application/utils"
-	database "backend/internal/infrastructure/persistence"
-	"backend/internal/middleware"
-	"backend/rabbitmq"
+	"api/config"
+	"api/internal/application/di"
+	"api/internal/application/router"
+	"api/internal/application/utils"
+	database "api/internal/infrastructure/persistence"
+	"api/internal/middleware"
 	"log"
 	"net/http"
 	"time"
 
-	_ "backend/docs" // Import the generated docs
+	_ "api/docs" // Import the generated docs
 )
 
 // @title Football League API
@@ -31,14 +30,7 @@ func main() {
 	defer mongoDB.Client.Disconnect(ctx)
 
 	// Connect to RabbitMQ
-	conn, ch, err := rabbitmq.ConnectToRabbitMQ()
-	if err != nil {
-		log.Fatalf("Failed to connect to RabbitMQ: %v", err)
-	}
-	defer conn.Close()
-	defer ch.Close()
-
-	log.Println("Successfully connected to RabbitMQ!")
+	//conn, ch, err := utils.ConnectToRabbitMQ()
 
 	// Registering services
 	container := di.InitializeServices(mongoDB.Database)

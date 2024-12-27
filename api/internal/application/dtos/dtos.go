@@ -1,7 +1,7 @@
 package dtos
 
 import (
-	"backend/internal/domain/models"
+	"api/internal/domain/models"
 )
 
 type UpdateFixtureDTO struct {

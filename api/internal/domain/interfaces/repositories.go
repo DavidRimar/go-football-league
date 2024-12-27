@@ -1,7 +1,7 @@
 package interfaces
 
 import (
-	"backend/internal/domain/models"
+	"api/internal/domain/models"
 	"context"
 )
 

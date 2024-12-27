@@ -3,7 +3,7 @@ package router
 import (
 	"net/http"
 
-	_ "backend/docs" // Swagger docs import
+	_ "api/docs" // Swagger docs import
 
 	"github.com/gorilla/mux"
 	httpSwagger "github.com/swaggo/http-swagger"

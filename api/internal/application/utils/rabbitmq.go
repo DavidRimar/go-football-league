@@ -1,4 +1,4 @@
-package rabbitmq
+package utils
 
 import (
 	"github.com/rabbitmq/amqp091-go"

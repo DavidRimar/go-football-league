@@ -6,9 +6,9 @@ import (
 	"log"
 	"time"
 
-	"backend/internal/application/utils"
-	"backend/internal/domain/interfaces"
-	"backend/internal/domain/models"
+	"api/internal/application/utils"
+	"api/internal/domain/interfaces"
+	"api/internal/domain/models"
 )
 
 type DataSeederService struct {
