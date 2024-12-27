@@ -7,6 +7,7 @@ import (
 	"backend/internal/application/utils"
 	database "backend/internal/infrastructure/persistence"
 	"backend/internal/middleware"
+	"backend/rabbitmq"
 	"log"
 	"net/http"
 	"time"
@@ -28,6 +29,16 @@ func main() {
 	// MongoDB
 	mongoDB := database.InitializeMongoDB(ctx, cfg.DatabaseURI, cfg.DatabaseName)
 	defer mongoDB.Client.Disconnect(ctx)
+
+	// Connect to RabbitMQ
+	conn, ch, err := rabbitmq.ConnectToRabbitMQ()
+	if err != nil {
+		log.Fatalf("Failed to connect to RabbitMQ: %v", err)
+	}
+	defer conn.Close()
+	defer ch.Close()
+
+	log.Println("Successfully connected to RabbitMQ!")
 
 	// Registering services
 	container := di.InitializeServices(mongoDB.Database)
