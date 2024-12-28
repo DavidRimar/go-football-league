@@ -1,8 +1,17 @@
 version: "3.8"
 
 services:
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: api
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./api/.env
+
   rabbitmq:
-    tty: true
     build:
       context: ./rabbitmq
       dockerfile: Dockerfile
@@ -14,7 +23,7 @@ services:
       RABBITMQ_DEFAULT_USER: admin
       RABBITMQ_DEFAULT_PASS: password
     volumes:
-      - rabbitmq_data:/var/lib/rabbitmq # Persist data
+      - rabbitmq_data:/var/lib/rabbitmq
 
 volumes:
   rabbitmq_data:
