@@ -1,20 +1,44 @@
 package utils
 
 import (
+	"log"
+
 	"github.com/rabbitmq/amqp091-go"
 )
 
-func ConnectToRabbitMQ() (*amqp091.Connection, *amqp091.Channel, error) {
-	conn, err := amqp091.Dial("amqp://username:password@localhost:5672/")
+var rabbitMQConnection *amqp091.Connection
+var rabbitMQChannel *amqp091.Channel
+
+func ConnectToRabbitMQ(connectionString string) *amqp091.Channel {
+
+	conn, err := amqp091.Dial(connectionString)
 	if err != nil {
-		return nil, nil, err
+		log.Fatalf("Failed to connect to RabbitMQ: %v", err)
 	}
 
 	ch, err := conn.Channel()
 	if err != nil {
 		conn.Close()
-		return nil, nil, err
+		log.Fatalf("Failed to create RabbitMQ channel: %v", err)
 	}
 
-	return conn, ch, nil
+	rabbitMQConnection = conn
+	rabbitMQChannel = ch
+
+	return ch
+}
+
+func CloseRabbitMQ() {
+	if rabbitMQChannel != nil {
+		err := rabbitMQChannel.Close()
+		if err != nil {
+			log.Printf("Failed to close RabbitMQ channel: %v", err)
+		}
+	}
+	if rabbitMQConnection != nil {
+		err := rabbitMQConnection.Close()
+		if err != nil {
+			log.Printf("Failed to close RabbitMQ connection: %v", err)
+		}
+	}
 }

@@ -2,7 +2,6 @@ package services
 
 import (
 	"api/internal/application/dtos"
-	"api/internal/domain/interfaces"
 	"api/internal/domain/models"
 	"api/internal/infrastructure/repositories"
 	"context"
@@ -10,8 +9,7 @@ import (
 )
 
 type FixturesService struct {
-	repo           *repositories.FixturesRepository
-	eventPublisher interfaces.EventPublisher
+	repo *repositories.FixturesRepository
 }
 
 func NewFixtureService(repo *repositories.FixturesRepository) *FixturesService {
@@ -40,13 +38,6 @@ func (s *FixturesService) UpdateFixture(ctx context.Context, fixtureID string, f
 	fixture.HomeScore = fixtureUpdate.HomeScore
 	fixture.AwayScore = fixtureUpdate.AwayScore
 	fixture.Status = models.FixtureStatus(fixtureUpdate.Status)
-
-	// if fixture is Final, publish an event
-	// Prepare the event data
-	//eventMessage := fmt.Sprintf(`{"match_id": %d, "new_score": "%s"}`, fixtureID, fixtureUpdate.HomeScore, fixtureUpdate.AwayScore)
-
-	// Publish the event
-	//s.eventPublisher.PublishEvent(eventMessage)
 
 	return s.repo.UpdateFixture(ctx, fixtureID, fixture)
 }

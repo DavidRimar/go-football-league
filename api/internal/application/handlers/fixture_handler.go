@@ -10,6 +10,7 @@ import (
 	"api/internal/application/dtos"
 	"api/internal/application/services"
 	"api/internal/application/utils"
+	"api/internal/domain/interfaces"
 	"api/internal/domain/models"
 
 	"github.com/gorilla/mux"
@@ -19,10 +20,17 @@ import (
 type FixtureHandler struct {
 	fixtureService   *services.FixturesService
 	teamStatsService *services.TeamStatsService
+	eventPublisher   interfaces.EventPublisher
 }
 
-func NewFixtureHandler(fixtureService *services.FixturesService, teamStatsService *services.TeamStatsService) *FixtureHandler {
-	return &FixtureHandler{fixtureService: fixtureService, teamStatsService: teamStatsService}
+func NewFixtureHandler(fixtureService *services.FixturesService,
+	teamStatsService *services.TeamStatsService,
+	eventPublisher interfaces.EventPublisher) *FixtureHandler {
+	return &FixtureHandler{
+		fixtureService:   fixtureService,
+		teamStatsService: teamStatsService,
+		eventPublisher:   eventPublisher,
+	}
 }
 
 func (h *FixtureHandler) validateGameweekID(id string) (int, error) {
@@ -113,10 +121,9 @@ func (h *FixtureHandler) UpdateFixture(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// If the fixture status is "Played", call TeamStatsService to update team statistics
+	// PUBLISH EVENT
 	if dto.Status == models.StatusPlayed {
 
-		// Apply new stats
 		newFixture := dtos.UpdateTeamStatsDTO{
 			HomeTeamId: fixture.HomeTeamId,
 			HomeScore:  dto.HomeScore,
@@ -124,9 +131,9 @@ func (h *FixtureHandler) UpdateFixture(w http.ResponseWriter, r *http.Request) {
 			AwayScore:  dto.AwayScore,
 		}
 
-		if err := h.teamStatsService.UpdateTeamStatistics(ctx, newFixture); err != nil {
-			http.Error(w, "Failed to update team statistics", http.StatusInternalServerError)
-			return
+		err := h.eventPublisher.PublishEvent(newFixture)
+		if err != nil {
+			log.Printf("Failed to publish event: %v", err)
 		}
 	}
 

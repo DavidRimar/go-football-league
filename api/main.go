@@ -30,10 +30,14 @@ func main() {
 	defer mongoDB.Client.Disconnect(ctx)
 
 	// Connect to RabbitMQ
-	//conn, ch, err := utils.ConnectToRabbitMQ()
+	rabbitMQChannel := utils.ConnectToRabbitMQ(cfg.RabbitMQConnectionString)
+	defer utils.CloseRabbitMQ()
 
-	// Registering services
-	container := di.InitializeServices(mongoDB.Database)
+	// Define the queue name
+	queueName := "team-stats-queue"
+
+	// Initialize services and DI container
+	container := di.InitializeServices(mongoDB.Database, rabbitMQChannel, queueName)
 
 	// Seed teams and fixtures
 	container.SeedService.SeedData(ctx)

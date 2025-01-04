@@ -3,8 +3,10 @@ package di
 import (
 	"api/internal/application/handlers"
 	"api/internal/application/services"
+	publisher "api/internal/infrastructure/events"
 	"api/internal/infrastructure/repositories"
 
+	"github.com/rabbitmq/amqp091-go"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -15,7 +17,7 @@ type Container struct {
 	SeedService      *services.DataSeederService
 }
 
-func InitializeServices(db *mongo.Database) *Container {
+func InitializeServices(db *mongo.Database, rabbitMQChannel *amqp091.Channel, queueName string) *Container {
 	// Initialize repositories
 	teamRepo := repositories.NewTeamRepository(db)
 	fixtureRepo := repositories.NewFixturesRepository(db)
@@ -27,9 +29,12 @@ func InitializeServices(db *mongo.Database) *Container {
 	teamStatService := services.NewTeamStatsService(teamStatsRepo)
 	seedService := services.NewDataSeederService(teamRepo, fixtureRepo, teamStatsRepo)
 
+	// Initialize the EventPublisher
+	eventPublisher := publisher.NewRabbitMQPublisher(rabbitMQChannel, queueName)
+
 	// Initialize handlers
 	teamHandler := handlers.NewTeamHandler(teamService)
-	fixtureHandler := handlers.NewFixtureHandler(fixtureService, teamStatService)
+	fixtureHandler := handlers.NewFixtureHandler(fixtureService, teamStatService, eventPublisher)
 	teamStatsHandler := handlers.NewTeamStatsHandler(teamStatService)
 
 	return &Container{

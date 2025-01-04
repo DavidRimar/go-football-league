@@ -13,7 +13,6 @@ type MongoDB struct {
 	Database *mongo.Database
 }
 
-// InitializeMongoDB initializes the MongoDB connection
 func InitializeMongoDB(ctx context.Context, uri string, dbName string) *MongoDB {
 	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
 	opts := options.Client().ApplyURI(uri).SetServerAPIOptions(serverAPI)

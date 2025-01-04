@@ -8,9 +8,10 @@ import (
 )
 
 type Config struct {
-	Port         string
-	DatabaseURI  string
-	DatabaseName string
+	Port                     string
+	DatabaseURI              string
+	DatabaseName             string
+	RabbitMQConnectionString string
 }
 
 func LoadConfig() Config {
@@ -29,10 +30,16 @@ func LoadConfig() Config {
 		log.Fatalf("DATABASE_NAME is not set")
 	}
 
+	rabbitMQConnectionString := os.Getenv("RABBITMQ_CONNECTION_STRING")
+	if rabbitMQConnectionString == "" {
+		log.Fatalf("RabbitMQ Connection String is not set")
+	}
+
 	return Config{
-		Port:         port,
-		DatabaseURI:  databaseURI,
-		DatabaseName: databaseName,
+		Port:                     port,
+		DatabaseURI:              databaseURI,
+		DatabaseName:             databaseName,
+		RabbitMQConnectionString: rabbitMQConnectionString,
 	}
 }
 
