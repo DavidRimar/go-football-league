@@ -10,6 +10,7 @@ services:
       - rabbitmq
     env_file:
       - ./api/.env
+    restart: always
 
   rabbitmq:
     build:

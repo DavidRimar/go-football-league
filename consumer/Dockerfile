@@ -1,27 +1,14 @@
-# Use the official Golang image to build the Go app
-FROM golang:1.20-alpine AS builder
-
-# Set the working directory inside the container
+# Stage 1: Build
+FROM golang:1.23.1 AS builder
 WORKDIR /app
+COPY . ./
+RUN go mod download
+COPY . ./
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o consumer .
 
-# Copy the source code into the container
-COPY ./consumer .
-
-# Fetch dependencies and build the Go app
-RUN go mod tidy
-RUN go build -o consumer main.go
-
-# Use a smaller image to run the Go app
+# Stage 2: Create image for running the application
 FROM alpine:latest
-
-# Install necessary dependencies (like ca-certificates) for RabbitMQ connection
-RUN apk --no-cache add ca-certificates
-
-# Copy the compiled binary from the builder image
-COPY --from=builder /app/consumer /consumer
-
-# Expose any required ports (optional, since consumer typically doesn’t expose)
+WORKDIR /root
+COPY --from=builder /app/consumer .
 EXPOSE 8080
-
-# Set the entry point for the container to run the Go consumer
-CMD ["/consumer"]
+CMD ["./consumer"]

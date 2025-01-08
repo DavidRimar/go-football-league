@@ -2,42 +2,35 @@ package main
 
 import (
 	"bytes"
+	"consumer/utils"
 	"fmt"
 	"log"
 	"net/http"
-
-	"github.com/streadway/amqp"
 )
 
 func main() {
-	// RabbitMQ connection parameters
-	rabbitmqURL := "amqp://admin:securepassword@rabbitmq:5672/"
-	conn, err := amqp.Dial(rabbitmqURL)
-	if err != nil {
-		log.Fatalf("Failed to connect to RabbitMQ: %s", err)
-	}
-	defer conn.Close()
 
-	// Open a channel to interact with RabbitMQ
-	ch, err := conn.Channel()
-	if err != nil {
-		log.Fatalf("Failed to open a channel: %s", err)
-	}
-	defer ch.Close()
+	// Connect to RabbitMQ
+	ch := utils.ConnectToRabbitMQ("amqp://admin:securepassword@rabbitmq:5672/")
+	defer utils.CloseRabbitMQ()
+
+	// Define the queue name
+	queueName := "team-stats-queue"
 
 	queue, err := ch.QueueDeclare(
-		"team-stats-queue", // queue name
-		true,               // durable
-		false,              // auto-delete
-		false,              // exclusive
-		false,              // no-wait
-		nil,                // arguments
+		queueName, // queue name
+		true,      // durable
+		false,     // auto-delete
+		false,     // exclusive
+		false,     // no-wait
+		nil,       // arguments
 	)
 	if err != nil {
 		log.Fatalf("Failed to declare a queue: %s", err)
 	}
 
 	// Consume messages from the queue
+	// This line essentially tells the program to wait indefinitely for new messages to arrive in the queue
 	msgs, err := ch.Consume(
 		queue.Name, // queue name
 		"",         // consumer tag (default)
@@ -56,13 +49,7 @@ func main() {
 		fmt.Printf("Received a message: %s\n", msg.Body)
 
 		// Call API endpoint when a message is consumed
-		api_fixtures_endpoint := "http://api:8080/fixtures/GW2_FXT5"
-		err := callAPI(api_fixtures_endpoint, msg.Body)
-		if err != nil {
-			log.Printf("Error calling API: %s", err)
-		} else {
-			fmt.Println("API called successfully")
-		}
+
 	}
 }
 
@@ -75,9 +62,9 @@ func callAPI(url string, body []byte) error {
 	}
 	defer resp.Body.Close()
 
-	// Check the status code
 	if resp.StatusCode != http.StatusOK {
 		return fmt.Errorf("API request failed with status: %d", resp.StatusCode)
 	}
+
 	return nil
 }
