@@ -49,19 +49,35 @@ func main() {
 		fmt.Printf("Received a message: %s\n", msg.Body)
 
 		// Call API endpoint when a message is consumed
-
+		api_standings_endpoint := "http://api:8080/api/standings"
+		err := callAPI(http.MethodPut, api_standings_endpoint, msg.Body)
+		if err != nil {
+			log.Printf("Error calling API: %s", err)
+		} else {
+			fmt.Println("API called successfully")
+		}
 	}
 }
 
-// Function to call an API endpoint
-func callAPI(url string, body []byte) error {
-	// Make a POST request to the API
-	resp, err := http.Post(url, "application/json", bytes.NewBuffer(body))
+func callAPI(method, url string, body []byte) error {
+
+	req, err := http.NewRequest(method, url, bytes.NewBuffer(body))
+	if err != nil {
+		return fmt.Errorf("failed to create %s request: %w", method, err)
+	}
+
+	// Set the appropriate headers
+	req.Header.Set("Content-Type", "application/json")
+
+	// Use the HTTP client to send the request
+	client := &http.Client{}
+	resp, err := client.Do(req)
 	if err != nil {
 		return fmt.Errorf("failed to make API request: %w", err)
 	}
 	defer resp.Body.Close()
 
+	// Check for non-200 status codes
 	if resp.StatusCode != http.StatusOK {
 		return fmt.Errorf("API request failed with status: %d", resp.StatusCode)
 	}

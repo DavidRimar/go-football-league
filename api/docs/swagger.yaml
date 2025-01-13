@@ -29,6 +29,17 @@ definitions:
       status:
         $ref: '#/definitions/models.FixtureStatus'
     type: object
+  dtos.UpdateTeamStatsDTO:
+    properties:
+      awayScore:
+        type: integer
+      awayTeamId:
+        type: string
+      homeScore:
+        type: integer
+      homeTeamId:
+        type: string
+    type: object
   models.Fixture:
     properties:
       awayScore:
@@ -155,6 +166,39 @@ paths:
               $ref: '#/definitions/dtos.GetTeamStatisticsDTO'
             type: array
       summary: Get standings
+      tags:
+      - Standings
+    put:
+      consumes:
+      - application/json
+      description: Update team statistics for specific teams
+      parameters:
+      - description: Team Statistics Update Data
+        in: body
+        name: updateTeamStatistics
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.UpdateTeamStatsDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Stats updated successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid input
+          schema:
+            type: string
+        "404":
+          description: Team not found
+          schema:
+            type: string
+        "500":
+          description: Failed to update statistics
+          schema:
+            type: string
+      summary: Update Standings
       tags:
       - Standings
   /api/teams:
