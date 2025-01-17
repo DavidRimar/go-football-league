@@ -5,12 +5,25 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 )
 
 func main() {
 
+	// Get API Base URL from environment variable
+	apiBaseURL := os.Getenv("API_BASE_URL")
+	if apiBaseURL == "" {
+		log.Fatal("API_BASE_URL is not set")
+	}
+
+	// Get RABBITMQ URL from environment variable
+	rabbitMqConnectionString := os.Getenv("RABBITMQ_CONNECTION_STRING")
+	if rabbitMqConnectionString == "" {
+		log.Fatal("RABBITMQ_CONNECTION_STRING is not set")
+	}
+
 	// Connect to RabbitMQ
-	ch := utils.ConnectToRabbitMQ("amqp://admin:securepassword@rabbitmq:5672/")
+	ch := utils.ConnectToRabbitMQ(rabbitMqConnectionString)
 	defer utils.CloseRabbitMQ()
 
 	// Define the queue name
@@ -48,8 +61,9 @@ func main() {
 		fmt.Printf("Received a message: %s\n", msg.Body)
 
 		// Call API endpoint when a message is consumed
-		api_standings_endpoint := "http://api:8080/api/standings"
-		err := utils.CallAPI(http.MethodPut, api_standings_endpoint, msg.Body)
+		apiStandingsEndpoint := fmt.Sprintf("%s/api/standings", apiBaseURL)
+		log.Printf("API: %s", apiStandingsEndpoint)
+		err := utils.CallAPI(http.MethodPut, apiStandingsEndpoint, msg.Body)
 		if err != nil {
 			log.Printf("Error calling API: %s", err)
 		} else {

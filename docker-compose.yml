@@ -8,8 +8,10 @@ services:
       - "8080:8080"
     depends_on:
       - rabbitmq
-    env_file:
-      - ./api/.env
+    environment:
+      DATABASE_URI: ${DATABASE_URI}
+      DATABASE_NAME: ${DATABASE_NAME}
+      RABBITMQ_CONNECTION_STRING: ${RABBITMQ_CONNECTION_STRING}
     networks:
       - app-network
     restart: always
@@ -23,8 +25,8 @@ services:
       - "5672:5672"
       - "15672:15672"
     environment:
-      RABBITMQ_DEFAULT_USER: admin
-      RABBITMQ_DEFAULT_PASS: securepassword
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
     networks:
@@ -38,8 +40,8 @@ services:
     depends_on:
       - rabbitmq
     environment:
-      RABBITMQ_URL: "amqp://admin:securepassword@rabbitmq:5672/"
-      API_BASE_URL: "http://api:8080/"
+      RABBITMQ_CONNECTION_STRING: ${RABBITMQ_CONNECTION_STRING}
+      API_BASE_URL: ${API_BASE_URL}
     ports:
       - "8081:8080"
     restart: always
