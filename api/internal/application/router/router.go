@@ -20,6 +20,7 @@ type FixtureHandler interface {
 
 type TeamStatsHandler interface {
 	GetStandings(w http.ResponseWriter, r *http.Request)
+	UpdateStandings(w http.ResponseWriter, r *http.Request)
 }
 
 func NewRouter(teamHandler TeamHandler, fixtureHandler FixtureHandler, teamStatsHandler TeamStatsHandler) *mux.Router {
@@ -29,6 +30,8 @@ func NewRouter(teamHandler TeamHandler, fixtureHandler FixtureHandler, teamStats
 	r.HandleFunc("/api/fixtures/{gameweekId}", fixtureHandler.GetFixturesByGameweek).Methods(http.MethodGet)
 	r.HandleFunc("/api/fixtures/{fixtureId}", fixtureHandler.UpdateFixture).Methods(http.MethodPut)
 	r.HandleFunc("/api/standings", teamStatsHandler.GetStandings).Methods(http.MethodGet)
+	r.HandleFunc("/api/standings", teamStatsHandler.UpdateStandings).Methods(http.MethodPut)
+
 	r.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
 
 	return r

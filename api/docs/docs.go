@@ -127,6 +127,56 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "put": {
+                "description": "Update team statistics for specific teams",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Standings"
+                ],
+                "summary": "Update Standings",
+                "parameters": [
+                    {
+                        "description": "Team Statistics Update Data",
+                        "name": "updateTeamStatistics",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dtos.UpdateTeamStatsDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Stats updated successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Team not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to update statistics",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
             }
         },
         "/api/teams": {
@@ -200,6 +250,23 @@ const docTemplate = `{
                 },
                 "status": {
                     "$ref": "#/definitions/models.FixtureStatus"
+                }
+            }
+        },
+        "dtos.UpdateTeamStatsDTO": {
+            "type": "object",
+            "properties": {
+                "awayScore": {
+                    "type": "integer"
+                },
+                "awayTeamId": {
+                    "type": "string"
+                },
+                "homeScore": {
+                    "type": "integer"
+                },
+                "homeTeamId": {
+                    "type": "string"
                 }
             }
         },
