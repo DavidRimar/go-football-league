@@ -20,7 +20,7 @@ The `Update Fixture` endpoint focuses solely on its primary responsibility which
 
 Here is a graph to show the flow of these activities:
 
-![Update Fixture Flow](assets/architecture.svg)
+![Update Fixture Flow](assets/architecture.png)
 
 #### 2. Scalability and Modularity
 
