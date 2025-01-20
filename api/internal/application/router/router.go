@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	_ "api/docs" // Swagger docs import
+	"api/internal/middleware"
 
 	"github.com/gorilla/mux"
 	httpSwagger "github.com/swaggo/http-swagger"
@@ -30,7 +31,7 @@ func NewRouter(teamHandler TeamHandler, fixtureHandler FixtureHandler, teamStats
 	r.HandleFunc("/api/fixtures/{gameweekId}", fixtureHandler.GetFixturesByGameweek).Methods(http.MethodGet)
 	r.HandleFunc("/api/fixtures/{fixtureId}", fixtureHandler.UpdateFixture).Methods(http.MethodPut)
 	r.HandleFunc("/api/standings", teamStatsHandler.GetStandings).Methods(http.MethodGet)
-	r.HandleFunc("/api/standings", teamStatsHandler.UpdateStandings).Methods(http.MethodPut)
+	r.Handle("/api/standings", middleware.AuthMiddleware(http.HandlerFunc(teamStatsHandler.UpdateStandings))).Methods(http.MethodPut)
 
 	r.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
 

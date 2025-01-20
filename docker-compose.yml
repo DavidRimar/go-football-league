@@ -12,6 +12,7 @@ services:
       DATABASE_URI: ${DATABASE_URI}
       DATABASE_NAME: ${DATABASE_NAME}
       RABBITMQ_CONNECTION_STRING: ${RABBITMQ_CONNECTION_STRING}
+      API_SECRET_KEY: ${API_SECRET_KEY}
     networks:
       - app-network
     restart: always
