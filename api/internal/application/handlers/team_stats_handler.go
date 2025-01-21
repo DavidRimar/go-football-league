@@ -37,6 +37,7 @@ func (h *TeamStatsHandler) GetStandings(w http.ResponseWriter, r *http.Request) 
 // @Summary Update Standings
 // @Description Update team statistics for specific teams
 // @Tags Standings
+// @Security ApiKeyAuth
 // @Accept json
 // @Produce json
 // @Param updateTeamStatistics body dtos.UpdateTeamStatsDTO true "Team Statistics Update Data"

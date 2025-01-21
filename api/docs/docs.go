@@ -17,6 +17,11 @@ const docTemplate = `{
     "paths": {
         "/api/fixtures/{fixtureId}": {
             "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Update the fixture's status and scores by its ID.",
                 "consumes": [
                     "application/json"
@@ -129,6 +134,11 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Update team statistics for specific teams",
                 "consumes": [
                     "application/json"
@@ -336,6 +346,13 @@ const docTemplate = `{
                     "type": "integer"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "X-API-KEY",
+            "in": "header"
         }
     }
 }`

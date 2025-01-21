@@ -74,6 +74,7 @@ func (h *FixtureHandler) GetFixturesByGameweek(w http.ResponseWriter, r *http.Re
 // @Summary Update Fixture
 // @Description Update the fixture's status and scores by its ID.
 // @Tags Fixtures
+// @Security ApiKeyAuth
 // @Accept json
 // @Produce json
 // @Param fixtureId path string true "Fixture ID"

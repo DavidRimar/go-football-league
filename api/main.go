@@ -17,6 +17,9 @@ import (
 // @title Football League API
 // @version 1.0
 // @description This is the Football League API documentation for the Football League service.
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name X-API-KEY
 func main() {
 	// Load configuration
 	cfg := config.LoadConfig()

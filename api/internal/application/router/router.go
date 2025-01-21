@@ -29,7 +29,7 @@ func NewRouter(teamHandler TeamHandler, fixtureHandler FixtureHandler, teamStats
 	r := mux.NewRouter()
 	r.HandleFunc("/api/teams", teamHandler.GetTeams).Methods(http.MethodGet)
 	r.HandleFunc("/api/fixtures/{gameweekId}", fixtureHandler.GetFixturesByGameweek).Methods(http.MethodGet)
-	r.HandleFunc("/api/fixtures/{fixtureId}", fixtureHandler.UpdateFixture).Methods(http.MethodPut)
+	r.Handle("/api/fixtures/{fixtureId}", middleware.AuthMiddleware(http.HandlerFunc(fixtureHandler.UpdateFixture))).Methods(http.MethodPut)
 	r.HandleFunc("/api/standings", teamStatsHandler.GetStandings).Methods(http.MethodGet)
 	r.Handle("/api/standings", middleware.AuthMiddleware(http.HandlerFunc(teamStatsHandler.UpdateStandings))).Methods(http.MethodPut)
 

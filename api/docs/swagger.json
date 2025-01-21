@@ -9,6 +9,11 @@
     "paths": {
         "/api/fixtures/{fixtureId}": {
             "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Update the fixture's status and scores by its ID.",
                 "consumes": [
                     "application/json"
@@ -121,6 +126,11 @@
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Update team statistics for specific teams",
                 "consumes": [
                     "application/json"
@@ -328,6 +338,13 @@
                     "type": "integer"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "X-API-KEY",
+            "in": "header"
         }
     }
 }
